@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" media="screen" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<h1>Payment form</h1>
+<br>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+{% import 'bootstrap/wtf.html' as wtf %}
+{% if form %}
+<div class=container"><br>
+    <div class="row align-items-center justify-content-center">
+        <form class="form form-horizontal" action="" method="post" role="form">
+            {{ form.hidden_tag() }}
+            {{ wtf.form_field(form.amount) }}
+            {{ wtf.form_field(form.currency) }}
+            {{ wtf.form_field(form.description) }}
+            {{ wtf.form_field(form.shop_id) }}
+            {{ wtf.form_field(form.shop_order_id) }}
+            {{ wtf.form_field(form.submit, class="btn btn-success") }}
+        </form>
+    </div>
+</div>
+{% endif %}
+
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form name="{{ data.name }}" method="{{ data.method }}" action="{{ data.action }}" accept-charset="UTF-8">
+    {% for name, value in data.fields.items() %}
+        <input type="hidden" name="{{ name }}" value="{{ value }}" >
+    {% endfor %}
+    <input type="submit">
+</form>
+{% endblock %}
