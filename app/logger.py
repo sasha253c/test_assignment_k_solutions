@@ -50,6 +50,6 @@ sql_handler.setFormatter(formatter)
 
 LOGGER = logging.getLogger(__name__)
 LOGGER.addHandler(file_handler)
-LOGGER.addHandler(sql_handler)
+# LOGGER.addHandler(sql_handler)
 LOGGER.setLevel(logging.INFO)
 
