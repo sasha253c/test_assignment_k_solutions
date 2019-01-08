@@ -21,7 +21,6 @@ def index():
         print('*'*80)
         res = strategy.execute(params=request.form.to_dict())
         flash(f'RES: {res}')
-        res = "hello index"
         return res
     return render_template('base.html', form=form)
 
