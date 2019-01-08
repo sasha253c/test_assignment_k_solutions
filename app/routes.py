@@ -5,7 +5,7 @@ from app.forms import PaymentForm
 from app.strategies import choose_strategy
 
 from flask import request, flash, redirect, url_for, render_template
-from app.logger import LOGGER
+# from app.logger import LOGGER
 
 
 @app.route("/", methods=['GET', 'POST'])
@@ -16,7 +16,8 @@ def index():
         flash(f'Form data: {form.data}\n')
         strategy = choose_strategy(currency=form.currency.data)
         # Todo: add log massage with time, currency, amount and discribe
-        LOGGER.info(f"Payment: {request.form.to_dict()}")
+        # LOGGER.info(f"Payment: {request.form.to_dict()}")
+        app.logger.info(f"Payment: {request.form.to_dict()}")
         print('FORM: ', request.form.to_dict())
         print('*'*80)
         res = strategy.execute(params=request.form.to_dict())

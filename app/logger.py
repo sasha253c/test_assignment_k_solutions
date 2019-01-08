@@ -1,9 +1,10 @@
 import logging
+import sys
 import traceback
 from functools import wraps
 from logging.handlers import RotatingFileHandler
 
-from app import db
+from app import db, app
 from app.models import LogTable
 
 
@@ -16,9 +17,9 @@ def function_logger(func):
         try:
             res = func(*args, **kwargs)
         except Exception as error:
-            LOGGER.exception(f"Error: {error}")
+            app.logger.exception(f"Error: {error}")
 
-        LOGGER.info(f"function: {func.__name__} runs with:\n\targs: {args_str}\n\tkwargs: {kwargs_str}")
+        app.logger.info(f"function: {func.__name__} runs with:\n\targs: {args_str}\n\tkwargs: {kwargs_str}")
         return res
     return wrapper
 
@@ -48,8 +49,12 @@ sql_handler = SQLAlchemyHandler()
 sql_handler.setLevel(logging.INFO)
 sql_handler.setFormatter(formatter)
 
-LOGGER = logging.getLogger(__name__)
-LOGGER.addHandler(file_handler)
-# LOGGER.addHandler(sql_handler)
-LOGGER.setLevel(logging.INFO)
+# LOGGER = logging.getLogger(__name__)
+# LOGGER.addHandler(file_handler)
+# # LOGGER.addHandler(sql_handler)
+# LOGGER.setLevel(logging.INFO)
+
+app.logger.addHandler(file_handler)
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.DEBUG)
 
