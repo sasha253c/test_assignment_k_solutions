@@ -4,3 +4,4 @@ flask-bootstrap
 flask-sqlalchemy
 flask-migrate
 requests
+gunicorn
