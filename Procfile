@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn payment:app
+web: python payment.py runserver --host 0.0.0.0 --port 8000
