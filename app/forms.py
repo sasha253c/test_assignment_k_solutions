@@ -5,7 +5,7 @@ from wtforms.widgets import TextArea
 
 
 class PaymentForm(FlaskForm):
-    amount = DecimalField('Amount', validators=[DataRequired(), NumberRange(min=0)], default=1324)
+    amount = DecimalField('Amount', validators=[DataRequired(), NumberRange(min=0)], default=0)
     currency = SelectField('Currency', default='eur', choices=(('eur', 'EUR'),
                                                                ('usd', 'USD'),
                                                                ('rub', 'RUB'),

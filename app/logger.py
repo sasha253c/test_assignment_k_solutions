@@ -49,10 +49,6 @@ sql_handler = SQLAlchemyHandler()
 sql_handler.setLevel(logging.INFO)
 sql_handler.setFormatter(formatter)
 
-# LOGGER = logging.getLogger(__name__)
-# LOGGER.addHandler(file_handler)
-# # LOGGER.addHandler(sql_handler)
-# LOGGER.setLevel(logging.INFO)
 
 app.logger.addHandler(file_handler)
 app.logger.addHandler(logging.StreamHandler(sys.stdout))
