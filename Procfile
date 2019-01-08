@@ -1,1 +1,1 @@
-web: python payment.py runserver --host 0.0.0.0 --port 8000
+web: gunicorn hello:app
