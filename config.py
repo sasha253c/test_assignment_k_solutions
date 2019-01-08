@@ -15,6 +15,6 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    SERVER_NAME = '127.0.0.1:5001'
+    SERVER_NAME = '0.0.0.0:5001'
     USD_URL = 'https://private-anon-8cfc1d7f36-piastrix.apiary-mock.com/bill/create'
     RUB_URL = 'https://private-anon-8cfc1d7f36-piastrix.apiary-mock.com/invoice/create'
