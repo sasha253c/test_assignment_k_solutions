@@ -7,6 +7,7 @@ import requests
 from flask import render_template, flash, redirect, url_for
 
 from config import DevelopmentConfig as Config
+from app.logger import function_logger
 
 
 class AbstractStrategy(ABC):
@@ -18,7 +19,7 @@ class AbstractStrategy(ABC):
         pass
 
     def create_sign_key(self, params):
-        print("Error field not in:  ", set(self._required_fields) - set(params.keys()))
+        # print("Error field not in:  ", set(self._required_fields) - set(params.keys()))
         assert params.keys() >= set(self._required_fields)
         s = ':'.join(str(params.get(k, '')) for k in self._required_fields) + Config.SECRET
         m = hashlib.sha256()
@@ -30,6 +31,7 @@ class EuroStrate(AbstractStrategy):
     def __init__(self):
         self._required_fields = sorted({'amount', 'currency', 'shop_id', 'shop_order_id'})
 
+    @function_logger
     def execute(self, params=None):
         # create html form
         params.update({'currency': 978})
@@ -49,6 +51,7 @@ class UsdStrate(AbstractStrategy):
         self._required_fields = sorted({'shop_amount', 'shop_currency', 'shop_id', 'shop_order_id', 'payer_currency', })
         self._url = Config.USD_URL
 
+    @function_logger
     def execute(self, params=None):
         # send request and show response
         params.update({"shop_amount": params.get('amount', 0),
@@ -79,6 +82,7 @@ class RubStrate(AbstractStrategy):
         self._required_fields = sorted({'amount', 'currency', 'payway', 'shop_id', 'shop_order_id', })
         self._url = Config.RUB_URL
 
+    @function_logger
     def execute(self, params=None):
         # send requests and from response create html form
         params.update({"currency": 643, "payway": "payeer_rub",})
