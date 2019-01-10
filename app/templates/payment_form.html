@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class=container"><br>
+    <div class="row align-items-center justify-content-center">
+        <form class="form form-horizontal" name="{{ data.name }}" method="{{ data.method }}" action="{{ data.action }}"
+              accept-charset="UTF-8" role="form">
+            {% for name, value in data.fields.items() %}
+            <div class="form-group">
+                <label>{{ name }}:</label>
+                <input class="form-control" name="{{ name }}" value="{{ value }}" readonly>
+            </div>
+            {% endfor %}
+            <input class="btn btn-success" type="submit">
+        </form>
+    </div>
+</div>
+{% endblock %}
