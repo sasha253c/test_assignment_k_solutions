@@ -4,7 +4,7 @@ import hashlib
 from abc import ABC, abstractmethod
 
 import requests
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, redirect, url_for
 
 from app import app
 from app.logger import function_logger
@@ -90,7 +90,6 @@ class RubStrategy(AbstractStrategy):
         r = requests.post(self._url, json=self.params)
         if r.status_code == 200:
             data = r.json()
-            flash(f"DATA: {data}")
             if data['result']:
                 res = {
                     'name': 'Pay',
