@@ -8,7 +8,6 @@ from flask import render_template, flash, redirect, url_for
 
 from app import app
 from app.logger import function_logger
-from config import DevelopmentConfig as Config
 
 
 class AbstractStrategy(ABC):
@@ -24,8 +23,9 @@ class AbstractStrategy(ABC):
             self.params = params.copy()
 
     def create_sign_key(self, params):
-        assert params.keys() >= set(self._required_fields)
-        s = ':'.join(str(params.get(k, '')) for k in self._required_fields) + Config.SECRET
+        if params.keys() <= set(self._required_fields):
+            return None
+        s = ':'.join(str(params.get(k, '')) for k in self._required_fields) + app.config.get('SECRET')
         m = hashlib.sha256()
         m.update(s.encode())
         return m.hexdigest()
@@ -39,7 +39,6 @@ class EuroStrategy(AbstractStrategy):
     def execute(self, params=None):
         super().execute(params)
         self.params.update({'currency': 978})
-        print(f"Params: {self.params}")
         self.params['sign'] = self.create_sign_key(self.params)
         data = {
             'name': 'Pay',
@@ -53,7 +52,7 @@ class EuroStrategy(AbstractStrategy):
 class UsdStrategy(AbstractStrategy):
     def __init__(self):
         self._required_fields = sorted({'shop_amount', 'shop_currency', 'shop_id', 'shop_order_id', 'payer_currency', })
-        self._url = Config.USD_URL
+        self._url = app.config.get('USD_URL')
 
     @function_logger
     def execute(self, params=None):
@@ -62,7 +61,6 @@ class UsdStrategy(AbstractStrategy):
                        "shop_currency": 840,
                        "payer_currency": 840,
                        })
-        print(f"Params: {self.params}")
         self.params['sign'] = self.create_sign_key(self.params)
         r = requests.post(self._url, json=self.params)
         if r.status_code == 200:
@@ -71,7 +69,6 @@ class UsdStrategy(AbstractStrategy):
             except json.JSONDecodeError:
                 data = re.sub(r'"url": (https?.*?)\s.*?}', r'"url":  "\1" },', r.text)  # url value has not "
                 data = json.loads(data)
-            print(f"DATA: {data}")
             if data['result']:
                 return redirect(data['data']['url'])
             else:
@@ -83,13 +80,12 @@ class UsdStrategy(AbstractStrategy):
 class RubStrategy(AbstractStrategy):
     def __init__(self):
         self._required_fields = sorted({'amount', 'currency', 'payway', 'shop_id', 'shop_order_id', })
-        self._url = Config.RUB_URL
+        self._url = app.config.get('RUB_URL')
 
     @function_logger
     def execute(self, params=None):
         super().execute(params)
         self.params.update({"currency": 643, "payway": "payeer_rub",})
-        print(f"Params: {self.params}")
         self.params['sign'] = self.create_sign_key(self.params)
         r = requests.post(self._url, json=self.params)
         if r.status_code == 200:
